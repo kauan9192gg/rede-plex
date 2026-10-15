@@ -30,6 +30,7 @@ public class CodigoResgate extends JavaPlugin {
     private final Map<String, Code> codes = new LinkedHashMap<String, Code>();
     private File dataFile;
     private Wizard wizard;
+    private DiscordSync discord;
 
     @Override
     public void onEnable() {
@@ -41,12 +42,17 @@ public class CodigoResgate extends JavaPlugin {
         load();
         wizard = new Wizard(this);
         getServer().getPluginManager().registerEvents(wizard, this);
+        discord = new DiscordSync(this);
+        discord.start();
         getLogger().info(codes.size() + " codigo(s) carregado(s).");
     }
 
     @Override
     public void onDisable() {
-        save();
+        saveFile();
+        if (discord != null) {
+            discord.stop();
+        }
     }
 
     // ------------------------------------------------------------
@@ -73,6 +79,10 @@ public class CodigoResgate extends JavaPlugin {
     // ------------------------------------------------------------
     // Armazenamento (codes.yml)
     // ------------------------------------------------------------
+
+    java.util.Collection<Code> allCodes() {
+        return codes.values();
+    }
 
     Code getCode(String name) {
         return codes.get(name.toLowerCase());
@@ -109,7 +119,15 @@ public class CodigoResgate extends JavaPlugin {
         }
     }
 
+    /** Salva no arquivo e atualiza a mensagem do Discord. */
     void save() {
+        saveFile();
+        if (discord != null) {
+            discord.requestUpdate();
+        }
+    }
+
+    private void saveFile() {
         YamlConfiguration yml = new YamlConfiguration();
         int i = 0;
         for (Code code : codes.values()) {
@@ -243,6 +261,7 @@ public class CodigoResgate extends JavaPlugin {
             msg(sender, " &e/admcod list usados");
             msg(sender, " &e/admcod info &f<nome>");
             msg(sender, " &e/admcod resetar &f<cod> <player>");
+            msg(sender, " &e/admcod atualizar &7(recarrega config e atualiza o Discord)");
             msg(sender, "&8&m--------------------");
             msg(sender, "");
             return;
@@ -373,6 +392,17 @@ public class CodigoResgate extends JavaPlugin {
             }
             msg(sender, PREFIX_ADM + "&aUso de &f" + code.name + " &aresetado para &f" + args[2] + ".");
             log(sender.getName() + " resetou " + code.name + " para " + args[2]);
+            return;
+        }
+
+        if (sub.equals("atualizar")) {
+            reloadConfig();
+            if (!discord.isConfigured()) {
+                msg(sender, PREFIX_ADM + "&cWebhook do Discord nao configurado em config.yml (discord.webhook-url).");
+                return;
+            }
+            discord.push(true);
+            msg(sender, PREFIX_ADM + "&aEnviando atualizacao pro Discord... se nao aparecer, veja o console.");
             return;
         }
 
