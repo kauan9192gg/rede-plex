@@ -1,0 +1,19 @@
+COMO TRANSFORMAR ISSO NO .JAR (sem instalar nada)
+
+1. Crie uma conta gratis em https://github.com
+2. Clique em "+" (canto superior direito) > "New repository".
+   De um nome (ex: CodigoResgate), deixe Public ou Private, clique "Create repository".
+3. Na pagina do repositorio clique em "uploading an existing file".
+4. Extraia este ZIP no PC e ARRASTE TUDO que esta dentro da pasta
+   (inclusive a pasta ".github", "src" e o "pom.xml") pra janela do GitHub.
+   Clique em "Commit changes".
+   - Se a pasta ".github" nao subir: clique em "Add file" > "Create new file",
+     escreva no nome:  .github/workflows/build.yml
+     e cole o conteudo do arquivo build.yml que esta dentro dessa pasta.
+5. Clique na aba "Actions". Vai aparecer "Compilar plugin" rodando (bolinha amarela).
+   Espere ficar verde (1-2 minutos).
+6. Clique na execucao > la embaixo em "Artifacts" > baixe "CodigoResgate".
+   Extraia o zip: la dentro esta o CodigoResgate.jar
+7. Coloque o .jar na pasta /plugins do servidor e de restart.
+
+Se ficar vermelho (erro), clique nele, copie o texto do erro e mande pro Claude.
