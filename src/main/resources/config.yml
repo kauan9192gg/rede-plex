@@ -1,2 +1,13 @@
 # Mostrar para o jogador quais comandos foram executados ao resgatar um codigo?
 mostrar-comandos: false
+
+# Lista de codigos disponiveis no Discord (uma unica mensagem, sempre editada)
+discord:
+  # Cole aqui a URL do webhook (NAO coloque ela no GitHub!)
+  # Deixe "" para desativar.
+  webhook-url: ""
+  # ID da mensagem a ser editada. So pode editar mensagens enviadas por ESSE webhook.
+  # Se nao der pra editar (ou ficar vazio), o plugin cria uma mensagem nova e passa a editar ela.
+  message-id: "1468626008658677805"
+  # De quanto em quanto tempo conferir mudancas (ex: codigo que expirou). 0 = desligado.
+  atualizar-a-cada-minutos: 5
